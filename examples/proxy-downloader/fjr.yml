@@ -1,0 +1,29 @@
+name: download urls
+
+image: ghcr.io/user/image # TODO specify the image to use
+
+docker:
+  registry:
+    server: ghcr.io # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-with-a-personal-access-token-classic
+    user: USERNAME
+    password: {{ Exec "aws ecr get-login-password" }} # replaces with the output of this command
+
+input:
+  file: # Our input comes from a file
+    path: input.txt # The location of the file
+    format: eachLine # Each line of the file is a different input
+
+workers: # Our workers are listed in file like user@ip
+  file:
+    path: workers.txt
+    format: eachLine
+  ssh:
+#    privateKey: /Users/superduper/.ssh/id_rsa.pub # If you need to specify an SSH key, can do here
+  logs:
+    file: # output logs to files
+      directory: runs/logs/{{.RunID}} # will make a folder for each run
+
+worker_resources:
+  file:
+    path: proxys.txt
+    format: eachLine
