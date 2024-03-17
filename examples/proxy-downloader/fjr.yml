@@ -1,12 +1,15 @@
 name: download urls
 
-image: ghcr.io/user/image # TODO specify the image to use
-
 docker:
+  image: ghcr.io/user/image # TODO specify the image to use
   registry:
     server: ghcr.io # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-with-a-personal-access-token-classic
     user: USERNAME
     password: {{ Exec "aws ecr get-login-password" }} # replaces with the output of this command
+  environment:
+    AWS_ACCESS_KEY_ID: {{ Env "AWS_ACCESS_KEY_ID" }} # replaces with the env var
+    AWS_SECRET_ACCESS_KEY: {{ Env "AWS_SECRET_ACCESS_KEY" }} # replaces with the env var
+    AWS_DEFAULT_REGION: us-east-1
 
 input:
   file: # Our input comes from a file
@@ -24,6 +27,7 @@ workers: # Our workers are listed in file like user@ip
       directory: runs/logs/{{.RunID}} # will make a folder for each run
 
 worker_resources:
-  file:
-    path: proxys.txt
-    format: eachLine
+  - PROXY: # each worker gets a proxy from this list
+      file:
+        path: proxys.txt
+        format: eachLine

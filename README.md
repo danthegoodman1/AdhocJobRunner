@@ -52,4 +52,48 @@ You can configure a private docker registry so that your worker nodes will log i
 
 The `fjr.y(a)ml` file follows the (LINK) JSON schema.
 
-The configuration file uses go templates, which is given the [`JobRun` struct](). Anything in this can be templated into the 
+The configuration file uses go templates, which is given the [`JobRun` struct](). Anything in this can be templated into the configuration.
+
+### worker_resources
+
+An array of named worker resources.
+
+The resources will be available on the worker as `WORKER_RESOURCE_{NAME}`.
+
+⚠️ **WARNING:**
+
+The total number of workers used can be limited by the smallest amount of available worker resources. For example, if you have 10 workers, 8 `PROXY` resources, no more than 8 task instances will be executed concurrently, leaving 2 workers excluded. If multiple resources are used, the total number of concurrent workers is equivalent to the fewest resources. effectively this is calculated as `Min(workers, resource_a, resource_b, ...)`.
+
+Example:
+```yaml
+worker_resources:
+  - PROXY: # each worker gets a proxy from this list
+      file:
+        path: proxys.txt
+        format: eachLine
+```
+
+### Functions
+
+There are a few helper functions provided through go templates as well.
+
+#### Exec
+
+Returns the output of some terminal function. Not multi-line safe (will break YAML parsing).
+
+Example:
+
+```yaml
+docker:
+  registry:
+    password: {{ Exec "aws ecr get-login-password" }} # replaces with the output of this command
+```
+
+#### Env
+
+Returns the environment variable.
+
+Example:
+```gotemplate
+{{ Env "HOME" }}
+```
