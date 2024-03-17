@@ -1,7 +1,7 @@
 name: download urls
 
 docker:
-  image: ghcr.io/user/image # TODO specify the image to use
+  image: ghcr.io/user/image # specify the image to use
   registry:
     server: ghcr.io # https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#authenticating-with-a-personal-access-token-classic
     user: USERNAME
@@ -10,6 +10,8 @@ docker:
     AWS_ACCESS_KEY_ID: {{ Env "AWS_ACCESS_KEY_ID" }} # replaces with the env var
     AWS_SECRET_ACCESS_KEY: {{ Env "AWS_SECRET_ACCESS_KEY" }} # replaces with the env var
     AWS_DEFAULT_REGION: us-east-1
+    S3_BUCKET: mybucket
+    S3_PREFIX: some_prefix/
 
 input:
   file: # Our input comes from a file

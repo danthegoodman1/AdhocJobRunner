@@ -42,9 +42,7 @@ A Task Resource, like a Worker Resource, is a pool of resources that is given ou
 
 FancyJobRunner was designed to allow your code to be very agnostic to its environment. The only requirement is that you can provide a docker container that your worker nodes can pull, and 
 
-### Docker Registry Auth
-
-TODO: Example config
+### Docker
 
 You can configure a private docker registry so that your worker nodes will log in with docker before pulling the image for task execution.
 
@@ -94,6 +92,9 @@ docker:
 Returns the environment variable.
 
 Example:
-```gotemplate
-{{ Env "HOME" }}
+```yaml
+docker:
+  environment:
+    AWS_ACCESS_KEY_ID: {{ Env "AWS_ACCESS_KEY_ID" }} # replaces with the env var
+    AWS_SECRET_ACCESS_KEY: {{ Env "AWS_SECRET_ACCESS_KEY" }} # replaces with the env var
 ```
