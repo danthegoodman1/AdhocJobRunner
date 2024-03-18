@@ -1,5 +1,3 @@
-name: download urls
-
 docker:
   image: ghcr.io/user/image # specify the image to use
   registry:
@@ -18,15 +16,15 @@ input:
     path: input.txt # The location of the file
     format: eachLine # Each line of the file is a different input
 
-workers: # Our workers are listed in file like user@ip
+workers: # Workers are listed in file like `user@ip` (ssh format)
   file:
     path: workers.txt
     format: eachLine
-  ssh:
+#  ssh:
 #    privateKey: /Users/superduper/.ssh/id_rsa.pub # If you need to specify an SSH key, can do here
   logs:
     file: # output logs to files
-      directory: runs/logs/{{.RunID}} # will make a folder for each run
+      directory: runs/logs/{{ .RunID }} # will make a folder for each run
 
 worker_resources:
   - PROXY: # each worker gets a proxy from this list
